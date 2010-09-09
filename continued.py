@@ -132,6 +132,8 @@ class Continued(object):
     def digits(self):
         """
         Retrieve the digits of this continued fraction lazily.
+
+        Returns an iterable of some sort.
         """
 
         if self.finite:
