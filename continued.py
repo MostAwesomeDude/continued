@@ -28,6 +28,12 @@ class Continued(object):
     def from_rational(cls, numerator, denominator):
         instance = cls()
         factor = gcd(numerator, denominator)
+
+        # Special case: If GCD(p, q) is zero, then we have 0 / 0 == [0].
+        if not factor:
+            instance.digitlist.append(0)
+            return instance
+
         numerator //= factor
         denominator //= factor
         if denominator > numerator:
