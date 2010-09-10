@@ -102,6 +102,35 @@ class Continued(object):
         return instance
 
     @classmethod
+    def pi(cls):
+        """
+        Generate pi.
+
+        There are several formulae for pi as a generalized continued fraction,
+        including these three:
+
+         - (0 4); (1 1), (2 9), (2 25), (2 49), (2 81), ...
+         - (3 1); (6 9), (6 25), (6 49), (6 81), ...
+         - (0 4); (1 1), (3 4), (5 9), (7 16), ...
+
+        Of these three, the third grows the slowest and so it is the one
+        implmented here.
+        """
+
+        instance = cls()
+        instance.finite = False
+        def generator():
+            yield (0, 4)
+            p = 1
+            q = 1
+            while True:
+                yield (p, q**2)
+                p += 2
+                q += 1
+        instance.make_digits = regulated(generator())
+        return instance
+
+    @classmethod
     def sqrt(cls, i):
         instance = cls()
         instance.finite = False
