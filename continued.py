@@ -1,6 +1,30 @@
 import itertools
 import math
 
+def regulated(i):
+    """
+    Given an iterator that yields (p q) generalized continued fraction tuples,
+    generate the corresponding regular continued fraction.
+    """
+
+    a, b, c, d = 0, 1, 1, 0
+    while True:
+        try:
+            p, q = next(i)
+            a, b, c, d = b * q, a + b * p, d * q, c + d * p
+
+            ac = a // c if c else None
+            bd = b // d if d else None
+
+            if ac and bd and ac == bd:
+                r = ac
+                a, b, c, d = c, d, a - c * r, b - d * r
+                yield r
+
+        except ValueError:
+            yield b
+            raise StopIteration
+
 class Continued(object):
     """
     An implementation of continued fractions.
