@@ -114,6 +114,17 @@ class Continued(object):
         return instance
 
     @classmethod
+    def phi(cls):
+        """
+        Generate phi, the golden ratio.
+        """
+
+        instance = cls()
+        instance.finite = False
+        instance.make_digits = itertools.repeat(1)
+        return instance
+
+    @classmethod
     def pi(cls):
         """
         Generate pi.
