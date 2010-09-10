@@ -279,14 +279,14 @@ class Continued(object):
         y_is_empty = False
         while any((e, f, g, h)):
             old = a, b, c, d, e, f, g, h
-            print old
+            # print old
             ae = a // e if e else None
             bf = b // f if f else None
             cg = c // g if g else None
             dh = d // h if h else None
             if ae == bf and bf == cg and cg == dh:
                 r = ae
-                print r
+                # print r
                 # Output a term.
                 a, b, c, d, e, f, g, h = (e, f, g, h,
                     a - e * r, b - f * r, c - g * r, d - h * r)
