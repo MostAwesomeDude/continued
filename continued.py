@@ -2,10 +2,10 @@ import fractions
 import itertools
 import math
 
-def regulated(i):
+def simplified(i):
     """
     Given an iterator that yields (p q) generalized continued fraction tuples,
-    generate the corresponding regular continued fraction.
+    generate the corresponding simplified continued fraction.
     """
 
     a, b, c, d = 0, 1, 1, 0
@@ -150,7 +150,7 @@ class Continued(object):
                 yield (p, q**2)
                 p += 2
                 q += 1
-        instance.make_digits = regulated(generator())
+        instance.make_digits = simplified(generator())
         return instance
 
     @classmethod
