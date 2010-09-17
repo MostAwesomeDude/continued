@@ -28,5 +28,19 @@ class ContinuedTest(unittest.TestCase):
 
         self.assertEqual(digits, [3, 7, 15, 1, 292])
 
+    def test_rational(self):
+
+        eighth = continued.Continued.from_rational(1, 8)
+
+        self.assertEqual(eighth.digits, [0, 8])
+
+        fortytwo = continued.Continued.from_rational(42, 10)
+
+        self.assertEqual(fortytwo.digits, [4, 5])
+
+        fiveeighths = continued.Continued.from_rational(5, 8)
+
+        self.assertEqual(fiveeighths.digits, [0, 1, 1, 1, 2])
+
 if __name__ == "__main__":
     unittest.main()
