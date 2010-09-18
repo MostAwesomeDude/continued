@@ -363,8 +363,8 @@ def gcd(a, b):
 
     while a and b and (a != b):
         if a > b:
-            a -= b
+            chaff, a = divmod(a, b)
         elif b > a:
-            b -= a
+            chaff, b = divmod(b, a)
 
     return a if a else b
