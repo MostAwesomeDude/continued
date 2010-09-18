@@ -58,8 +58,6 @@ class Continued(object):
             numerator *= 10
             denominator *= 10
 
-        print numerator, denominator
-        print int(numerator), int(denominator)
         return cls.from_rational(int(numerator), int(denominator))
 
     @classmethod
@@ -233,6 +231,24 @@ class Continued(object):
 
     def __truediv__(self, other):
         return self.__div__(other)
+
+    def __cmp__(self, other):
+        if not isinstance(other, Continued):
+            return NotImplemented
+
+        if not self.finite and not other.finite:
+            return NotImplemented
+
+        toggle = False
+        for x, y in itertools.izip_longest(self.digits, other.digits,
+            fillvalue=0):
+            if x != y:
+                if toggle:
+                    return -1 if x > y else 1
+                else:
+                    return -1 if x < y else 1
+            toggle = not toggle
+        return 0
 
     @property
     def approximations(self):

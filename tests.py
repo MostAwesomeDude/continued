@@ -20,8 +20,8 @@ class ContinuedFunctionalityTest(unittest.TestCase):
 
         self.assertTrue(smaller < larger)
 
-        pi = continued.Continued.pi()
         threeonefive = continued.Continued.from_float(3.15)
+        pi = continued.Continued.pi()
 
         self.assertTrue(threeonefive > pi)
 
