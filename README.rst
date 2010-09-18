@@ -1,11 +1,33 @@
+.. include:: <isogrk1.txt>
+
 Continued
 =========
 
 Continued is a simple library for representing and operating on numbers
 represented as continued fractions.
 
+Features
+--------
+
+ * Conversion from a plethora of representations to continued fractions
+
+   * int
+   * float
+   * decimal.Decimal
+   * fractions.Fraction and numbers.Rational
+
+ * Basic arithmetic: addition, subtraction, multiplication, division
+ * Popular irrational and transcendental identities, to arbitrary (infinite)
+   precision
+
+   * *e* (Euler's number)
+   * |pgr|
+   * |phgr| (the Golden Ratio)
+
+ * Arbitrary-precision quadratic surds
+
 Bugs
-====
+----
 
 Plenty.
 
