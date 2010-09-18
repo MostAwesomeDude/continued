@@ -88,7 +88,7 @@ class Continued(object):
         # In the line above, we switched names, but this is still the previous
         # denominator.
         # Only record it if not 1; if it's 1, add it to the last item instead.
-        if instance.digitlist[-1] == 1:
+        if instance.digitlist[-1] == 1 and len(instance.digitlist) > 1:
             instance.digitlist = instance.digitlist[:-1]
             instance.digitlist[-1] += 1
         instance.normalize()

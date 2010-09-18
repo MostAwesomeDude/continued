@@ -5,7 +5,29 @@ import unittest
 
 import continued
 
-class ContinuedTest(unittest.TestCase):
+class ContinuedBugfixTest(unittest.TestCase):
+
+    def test_one(self):
+
+        one = continued.Continued.from_rational(1, 1)
+
+class ContinuedFunctionalityTest(unittest.TestCase):
+
+    def test_comparisons(self):
+
+        smaller = continued.Continued.from_rational(100, 89)
+        larger = continued.Continued.from_rational(244, 217)
+
+        self.assertTrue(smaller < larger)
+
+        pi = continued.Continued.pi()
+        threeonefive = continued.Continued.from_float(3.15)
+
+        self.assertTrue(threeonefive > pi)
+
+        one = continued.Continued.from_rational(1, 1)
+
+        self.assertTrue(one == one)
 
     def test_e(self):
 
