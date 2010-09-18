@@ -1,3 +1,4 @@
+import decimal
 import fractions
 import itertools
 import math
@@ -44,10 +45,33 @@ class Continued(object):
     """
 
     @classmethod
-    def from_int(cls, i):
-        instance = cls()
-        instance.digitlist = [i]
-        return instance
+    def from_decimal(cls, d):
+        """
+        Create a new continued fraction from a `decimal.Decimal` instance.
+        """
+
+        numerator = d
+        denominator = 1
+
+        # Is there a faster way to do this?
+        while numerator != numerator.to_integral_value():
+            numerator *= 10
+            denominator *= 10
+
+        print numerator, denominator
+        print int(numerator), int(denominator)
+        return cls.from_rational(int(numerator), int(denominator))
+
+    @classmethod
+    def from_float(cls, f):
+        """
+        Create a new continued fraction from a float.
+
+        This is hilariously imprecise, but it does the job well enough for
+        most people using it.
+        """
+
+        return cls.from_decimal(decimal.Decimal(repr(f)))
 
     @classmethod
     def from_fraction(cls, fraction):
@@ -59,6 +83,12 @@ class Continued(object):
         """
 
         return cls.from_rational(fraction.numerator, fraction.denominator)
+
+    @classmethod
+    def from_int(cls, i):
+        instance = cls()
+        instance.digitlist = [i]
+        return instance
 
     @classmethod
     def from_rational(cls, numerator, denominator):
