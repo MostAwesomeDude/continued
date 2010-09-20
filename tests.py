@@ -13,6 +13,19 @@ class ContinuedBugfixTest(unittest.TestCase):
 
 class ContinuedFunctionalityTest(unittest.TestCase):
 
+    def test_arithmetic(self):
+
+        first = continued.Continued.from_rational(3, 5)
+        second = continued.Continued.from_rational(7, 11)
+
+        third = continued.Continued.from_rational(68, 55)
+
+        self.assertTrue(first + second == third)
+
+        fourth = continued.Continued.from_rational(21, 55)
+
+        self.assertTrue(first * second == fourth)
+
     def test_comparisons(self):
 
         smaller = continued.Continued.from_rational(100, 89)
