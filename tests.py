@@ -9,27 +9,27 @@ class ContinuedBugfixTest(unittest.TestCase):
 
     def test_one(self):
 
-        one = continued.Continued.from_rational(1, 1)
+        one = continued.Rational(1, 1)
 
 class ContinuedFunctionalityTest(unittest.TestCase):
 
     def test_arithmetic(self):
 
-        first = continued.Continued.from_rational(3, 5)
-        second = continued.Continued.from_rational(7, 11)
+        first = continued.Rational(3, 5)
+        second = continued.Rational(7, 11)
 
-        third = continued.Continued.from_rational(68, 55)
+        third = continued.Rational(68, 55)
 
         self.assertTrue(first + second == third)
 
-        fourth = continued.Continued.from_rational(21, 55)
+        fourth = continued.Rational(21, 55)
 
         self.assertTrue(first * second == fourth)
 
     def test_comparisons(self):
 
-        smaller = continued.Continued.from_rational(100, 89)
-        larger = continued.Continued.from_rational(244, 217)
+        smaller = continued.Rational(100, 89)
+        larger = continued.Rational(244, 217)
 
         self.assertTrue(smaller < larger)
 
@@ -38,7 +38,7 @@ class ContinuedFunctionalityTest(unittest.TestCase):
 
         self.assertTrue(threeonefive > pi)
 
-        one = continued.Continued.from_rational(1, 1)
+        one = continued.Rational(1, 1)
 
         self.assertTrue(one == one)
 
@@ -65,17 +65,17 @@ class ContinuedFunctionalityTest(unittest.TestCase):
 
     def test_rational(self):
 
-        eighth = continued.Continued.from_rational(1, 8)
+        eighth = continued.Rational(1, 8)
 
-        self.assertEqual(eighth.digits, [0, 8])
+        self.assertEqual(eighth.digits(), [0, 8])
 
-        fortytwo = continued.Continued.from_rational(42, 10)
+        fortytwo = continued.Rational(42, 10)
 
-        self.assertEqual(fortytwo.digits, [4, 5])
+        self.assertEqual(fortytwo.digits(), [4, 5])
 
-        fiveeighths = continued.Continued.from_rational(5, 8)
+        fiveeighths = continued.Rational(5, 8)
 
-        self.assertEqual(fiveeighths.digits, [0, 1, 1, 1, 2])
+        self.assertEqual(fiveeighths.digits(), [0, 1, 1, 1, 2])
 
 if __name__ == "__main__":
     unittest.main()

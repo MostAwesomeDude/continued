@@ -77,7 +77,7 @@ def simplified(f):
 
             except ValueError:
                 yield b
-                raise StopIteration
+                return
 
     return simplifier
 
@@ -143,38 +143,8 @@ class Continued(object):
         return instance
 
     @classmethod
-    def from_rational(cls, numerator, denominator):
-        instance = cls()
-        factor = gcd(numerator, denominator)
-
-        # Special case: If GCD(p, q) is zero, then we have 0 / 0 == [0].
-        if not factor:
-            instance.digitlist.append(0)
-            return instance
-
-        numerator //= factor
-        denominator //= factor
-        if denominator > numerator:
-            instance.digitlist.append(0)
-            numerator, denominator = denominator, numerator
-        # Do the divmod() dance to generate GCD slices.
-        while True:
-            digit, numerator = divmod(numerator, denominator)
-           # print digit, numerator, denominator
-            if not digit:
-                break
-            instance.digitlist.append(digit)
-            if not numerator:
-                break
-            numerator, denominator = denominator, numerator
-        # In the line above, we switched names, but this is still the previous
-        # denominator.
-        # Only record it if not 1; if it's 1, add it to the last item instead.
-        if instance.digitlist[-1] == 1 and len(instance.digitlist) > 1:
-            instance.digitlist = instance.digitlist[:-1]
-            instance.digitlist[-1] += 1
-        instance.normalize()
-        return instance
+    def from_rational(cls, n, d):
+        return Rational(n, d)
 
     @classmethod
     def sqrt(cls, i):
@@ -206,10 +176,7 @@ class Continued(object):
         return str(self)
 
     def __str__(self):
-        if self.finite:
-            l = self.digitlist
-        else:
-            l = list(itertools.islice(self.digits(), 10)) + ["..."]
+        l = list(itertools.islice(self.digits(), 10)) + ["..."]
         return "Continued(%s)" % l
 
     def __add__(self, other):
@@ -235,7 +202,7 @@ class Continued(object):
             return NotImplemented
 
         toggle = False
-        for x, y in itertools.izip_longest(self.digits, other.digits,
+        for x, y in itertools.izip_longest(self.digits(), other.digits(),
             fillvalue=0):
             if x != y:
                 if toggle:
@@ -251,7 +218,7 @@ class Continued(object):
         Retrieve successively closer rational approximants lazily.
         """
 
-        d = self.digits
+        d = self.digits()
         oldoldp = next(d)
         oldoldq = 1
         yield oldoldp, oldoldq
@@ -268,7 +235,6 @@ class Continued(object):
             oldq, oldoldq = q, oldq
 
 
-    @property
     def digits(self):
         """
         Retrieve the digits of this continued fraction lazily.
@@ -276,11 +242,7 @@ class Continued(object):
         Returns an iterable of some sort.
         """
 
-        if self.finite:
-            return self.digitlist
-        else:
-            self.make_digits, retval = itertools.tee(self.make_digits)
-            return retval
+        return self.digitlist
 
     @property
     def fractions(self):
@@ -300,8 +262,8 @@ class Continued(object):
             other = Continued.from_int(other)
 
         instance = cls()
-        instance.x = self.digits
-        instance.y = other.digits
+        instance.x = self.digits()
+        instance.y = other.digits()
         instance.make_digits = instance.combiner(initial)
         if self.finite and other.finite:
             instance.digitlist = list(instance.make_digits)
@@ -384,6 +346,41 @@ class Continued(object):
                         self.digitlist[index + 2:])
         except ValueError:
             pass
+
+class Rational(Continued):
+
+    finite = True
+
+    def __init__(self, numerator, denominator):
+        self.n = numerator
+        self.d = denominator
+
+    def digits(self):
+        n, d = self.n, self.d
+
+        # Special cases. 0 / q == [0].
+        if n == 0:
+            yield 0
+            return
+
+        # Should this raise ValueError instead, maybe?
+        if d == 0:
+            yield 0
+            return
+
+        # If it's in [0, 1] then switch it around to avoid a divide-by-zero.
+        if d > n:
+            yield 0
+            n, d = d, n
+
+        while True:
+            digit, n = divmod(n, d)
+            if digit == 0:
+                break
+            yield digit
+            if n == 0:
+                break
+            n, d = d, n
 
 class E(Continued):
     """
