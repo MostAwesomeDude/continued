@@ -1,7 +1,24 @@
+"""
+Continued is an implementation of continued fraction handling and mathematical
+operations.
+
+Continued fractions are an alternative numbering system that can represent all
+rational numbers in finite space and all quadratic irrationals in infinite
+space with arbitrary precision.
+"""
+
 import decimal
 import fractions
 import itertools
 import math
+
+INFINITY = object()
+"""
+A sentinel object representing infinity.
+
+In continued fraction math, positive and negative infinity have the same
+meaning, so only one value is necessary.
+"""
 
 def simplified(i):
     """
@@ -317,8 +334,8 @@ class Continued(object):
     def combiner(self, initial):
         a, b, c, d, e, f, g, h = initial
 
-        iterx = itertools.chain(self.x, itertools.repeat(None))
-        itery = itertools.chain(self.y, itertools.repeat(None))
+        iterx = itertools.chain(self.x, itertools.repeat(INFINITY))
+        itery = itertools.chain(self.y, itertools.repeat(INFINITY))
 
         use_x = True
         x_is_empty = False
@@ -353,7 +370,7 @@ class Continued(object):
                 if use_x:
                     # Input from x.
                     p = next(iterx)
-                    if p is None:
+                    if p is INFINITY:
                         # Infinity: Replicate channels.
                         a, c, e, g = b, d, f, h
                         x_is_empty = True
@@ -365,7 +382,7 @@ class Continued(object):
                 else:
                     # Input from y.
                     q = next(itery)
-                    if q is None:
+                    if q is INFINITY:
                         # Infinity: Replicate channels.
                         a, b, e, f = c, d, g, h
                         y_is_empty = True
