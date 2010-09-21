@@ -67,15 +67,15 @@ class ContinuedFunctionalityTest(unittest.TestCase):
 
         eighth = continued.Rational(1, 8)
 
-        self.assertEqual(eighth.digits(), [0, 8])
+        self.assertEqual(list(eighth.digits()), [0, 8])
 
         fortytwo = continued.Rational(42, 10)
 
-        self.assertEqual(fortytwo.digits(), [4, 5])
+        self.assertEqual(list(fortytwo.digits()), [4, 5])
 
         fiveeighths = continued.Rational(5, 8)
 
-        self.assertEqual(fiveeighths.digits(), [0, 1, 1, 1, 2])
+        self.assertEqual(list(fiveeighths.digits()), [0, 1, 1, 1, 2])
 
 if __name__ == "__main__":
     unittest.main()

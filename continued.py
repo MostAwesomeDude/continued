@@ -348,6 +348,12 @@ class Continued(object):
             pass
 
 class Rational(Continued):
+    """
+    A standard rational number.
+
+    Continued fractions can represent all rational numbers precisely with a
+    finite number of digits.
+    """
 
     finite = True
 
@@ -374,12 +380,25 @@ class Rational(Continued):
             n, d = d, n
 
         while True:
+            # divmod() the next digit.
             digit, n = divmod(n, d)
+
+            # Catch trailing 1/1 (or any other equivalent ratio).
+            if n == d:
+                yield digit + 1
+                return
+
+            # A zero snuck into the fraction; the previous term was an exact
+            # division and we can end now.
             if digit == 0:
-                break
+                return
+
             yield digit
+
+            # A zero will be in the next fraction; we are finished.
             if n == 0:
                 break
+
             n, d = d, n
 
 class E(Continued):
