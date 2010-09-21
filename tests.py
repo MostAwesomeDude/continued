@@ -34,7 +34,7 @@ class ContinuedFunctionalityTest(unittest.TestCase):
         self.assertTrue(smaller < larger)
 
         threeonefive = continued.Continued.from_float(3.15)
-        pi = continued.Continued.pi()
+        pi = continued.Pi()
 
         self.assertTrue(threeonefive > pi)
 
@@ -44,22 +44,22 @@ class ContinuedFunctionalityTest(unittest.TestCase):
 
     def test_e(self):
 
-        e = continued.Continued.e()
-        digits = list(itertools.islice(e.digits, 5))
+        e = continued.E()
+        digits = list(itertools.islice(e.digits(), 5))
 
         self.assertEqual(digits, [2, 1, 2, 1, 1])
 
     def test_phi(self):
 
-        phi = continued.Continued.phi()
-        digits = list(itertools.islice(phi.digits, 5))
+        phi = continued.Phi()
+        digits = list(itertools.islice(phi.digits(), 5))
 
         self.assertEqual(digits, [1, 1, 1, 1, 1])
 
     def test_pi(self):
 
-        pi = continued.Continued.pi()
-        digits = list(itertools.islice(pi.digits, 5))
+        pi = continued.Pi()
+        digits = list(itertools.islice(pi.digits(), 5))
 
         self.assertEqual(digits, [3, 7, 15, 1, 292])
 

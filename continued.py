@@ -8,6 +8,7 @@ space with arbitrary precision.
 """
 
 import decimal
+import functools
 import fractions
 import itertools
 import math
@@ -45,29 +46,40 @@ def gcd(a, b):
 
     return a if a else b
 
-def simplified(i):
+def simplified(f):
     """
-    Given an iterator that yields (p q) generalized continued fraction tuples,
-    generate the corresponding simplified continued fraction.
+    Decorate a function to turn its generalized continued fraction digits into
+    simplified, canonical continued fraction digits.
     """
 
-    a, b, c, d = 0, 1, 1, 0
-    while True:
-        try:
-            p, q = next(i)
-            a, b, c, d = b * q, a + b * p, d * q, c + d * p
+    @functools.wraps(f)
+    def simplifier(*args, **kwargs):
+        """
+        Given an iterator that yields (p q) generalized continued fraction
+        tuples, generate the corresponding simplified continued fraction.
+        """
 
-            ac = a // c if c else None
-            bd = b // d if d else None
+        i = f(*args, **kwargs)
 
-            if ac and bd and ac == bd:
-                r = ac
-                a, b, c, d = c, d, a - c * r, b - d * r
-                yield r
+        a, b, c, d = 0, 1, 1, 0
+        while True:
+            try:
+                p, q = next(i)
+                a, b, c, d = b * q, a + b * p, d * q, c + d * p
 
-        except ValueError:
-            yield b
-            raise StopIteration
+                ac = a // c if c else None
+                bd = b // d if d else None
+
+                if ac and bd and ac == bd:
+                    r = ac
+                    a, b, c, d = c, d, a - c * r, b - d * r
+                    yield r
+
+            except ValueError:
+                yield b
+                raise StopIteration
+
+    return simplifier
 
 class Continued(object):
     """
@@ -197,7 +209,7 @@ class Continued(object):
         if self.finite:
             l = self.digitlist
         else:
-            l = list(itertools.islice(self.digits, 10)) + ["..."]
+            l = list(itertools.islice(self.digits(), 10)) + ["..."]
         return "Continued(%s)" % l
 
     def __add__(self, other):
