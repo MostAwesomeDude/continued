@@ -20,6 +20,31 @@ In continued fraction math, positive and negative infinity have the same
 meaning, so only one value is necessary.
 """
 
+def gcd(a, b):
+    """
+    Return the greatest common divisor of a and b.
+
+    One of a and b must be non-zero.
+
+    >>> gcd(3, 6)
+    3
+    >>> gcd(19872, 526293)
+    9
+    """
+
+    if not a:
+        return b
+    elif not b:
+        return a
+
+    while a and b and (a != b):
+        if a > b:
+            chaff, a = divmod(a, b)
+        elif b > a:
+            chaff, b = divmod(b, a)
+
+    return a if a else b
+
 def simplified(i):
     """
     Given an iterator that yields (p q) generalized continued fraction tuples,
@@ -123,7 +148,7 @@ class Continued(object):
         # Do the divmod() dance to generate GCD slices.
         while True:
             digit, numerator = divmod(numerator, denominator)
-            # print digit, numerator, denominator
+           # print digit, numerator, denominator
             if not digit:
                 break
             instance.digitlist.append(digit)
@@ -137,65 +162,6 @@ class Continued(object):
             instance.digitlist = instance.digitlist[:-1]
             instance.digitlist[-1] += 1
         instance.normalize()
-        return instance
-
-    @classmethod
-    def e(cls):
-        instance = cls()
-        instance.finite = False
-        def generator():
-            yield 2
-            i = 2
-            mod = 1
-            while True:
-                mod += 1
-                if mod % 3:
-                    yield 1
-                else:
-                    yield i
-                    i += 2
-                    mod = 0
-        instance.make_digits = generator()
-        return instance
-
-    @classmethod
-    def phi(cls):
-        """
-        Generate phi, the golden ratio.
-        """
-
-        instance = cls()
-        instance.finite = False
-        instance.make_digits = itertools.repeat(1)
-        return instance
-
-    @classmethod
-    def pi(cls):
-        """
-        Generate pi.
-
-        There are several formulae for pi as a generalized continued fraction,
-        including these three:
-
-         - (0 4); (1 1), (2 9), (2 25), (2 49), (2 81), ...
-         - (3 1); (6 9), (6 25), (6 49), (6 81), ...
-         - (0 4); (1 1), (3 4), (5 9), (7 16), ...
-
-        Of these three, the third grows the slowest and so it is the one
-        implmented here.
-        """
-
-        instance = cls()
-        instance.finite = False
-        def generator():
-            yield (0, 4)
-            p = 1
-            q = 1
-            while True:
-                yield (p, q**2)
-                p += 2
-                q += 1
-        instance.make_digits = simplified(generator())
         return instance
 
     @classmethod
@@ -407,27 +373,60 @@ class Continued(object):
         except ValueError:
             pass
 
-def gcd(a, b):
+class E(Continued):
     """
-    Return the greatest common divisor of a and b.
-
-    One of a and b must be non-zero.
-
-    >>> gcd(3, 6)
-    3
-    >>> gcd(19872, 526293)
-    9
+    Euler's number.
     """
 
-    if not a:
-        return b
-    elif not b:
-        return a
+    finite = False
 
-    while a and b and (a != b):
-        if a > b:
-            chaff, a = divmod(a, b)
-        elif b > a:
-            chaff, b = divmod(b, a)
+    def digits(self):
+        yield 2
+        i = 2
+        mod = 1
+        while True:
+            mod += 1
+            if mod % 3:
+                yield 1
+            else:
+                yield i
+                i += 2
+                mod = 0
 
-    return a if a else b
+class Phi(Continued):
+    """
+    The Golden Ratio.
+    """
+
+    finite = False
+
+    def digits(self):
+        return itertools.repeat(1)
+
+class Pi(Continued):
+    """
+    Pi.
+    """
+
+    finite = False
+
+    @simplified
+    def digits(self):
+        """
+        There are several formulae for pi as a generalized continued fraction,
+        including these three:
+
+         - (0 4); (1 1), (2 9), (2 25), (2 49), (2 81), ...
+         - (3 1); (6 9), (6 25), (6 49), (6 81), ...
+         - (0 4); (1 1), (3 4), (5 9), (7 16), ...
+
+        Of these three, the third grows the slowest and so it is the one
+        implmented here.
+        """
+        yield (0, 4)
+        p = 1
+        q = 1
+        while True:
+            yield (p, q**2)
+            p += 2
+            q += 1
