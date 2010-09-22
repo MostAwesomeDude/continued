@@ -136,35 +136,6 @@ class Continued(object):
 
         return Rational(fraction.numerator, fraction.denominator)
 
-    @classmethod
-    def from_int(cls, i):
-        instance = cls()
-        instance.digitlist = [i]
-        return instance
-
-    @classmethod
-    def sqrt(cls, i):
-        instance = cls()
-        instance.finite = False
-        def generator(i):
-            l = []
-            m = 0
-            d = 1
-            a = int(math.sqrt(i))
-            while (m, d, a) not in l:
-                l.append((m, d, a))
-                yield a
-                m = d * a - m
-                d = (i - m**2) / d
-                a = int((math.sqrt(i) + m) / d)
-            # Extract just the a component (index 2)
-            repeating = zip(*l[l.index((m, d, a)):])[2]
-            iterator = itertools.cycle(repeating)
-            while True:
-                yield next(iterator)
-        instance.make_digits = generator(i)
-        return instance
-
     def __init__(self):
         self.digitlist = []
 
@@ -347,6 +318,25 @@ class Continued(object):
         except ValueError:
             pass
 
+    @classmethod
+    def from_int(cls, i):
+        instance = cls()
+        instance.digitlist = [i]
+        return instance
+
+class Integer(Continued):
+    """
+    An integer.
+    """
+
+    finite = True
+
+    def __init__(self, integer):
+        self.i = integer
+
+    def digits(self):
+        yield self.i
+
 class Rational(Continued):
     """
     A standard rational number.
@@ -400,6 +390,33 @@ class Rational(Continued):
                 break
 
             n, d = d, n
+
+class Surd(Continued):
+    """
+    A quadratic irrational.
+    """
+
+    finite = False
+
+    def __init__(self, integer):
+        self.i = integer
+
+    def digits(self):
+        l = []
+        m = 0
+        d = 1
+        a = int(math.sqrt(self.i))
+        while (m, d, a) not in l:
+            l.append((m, d, a))
+            yield a
+            m = d * a - m
+            d = (self.i - m**2) / d
+            a = int((math.sqrt(self.i) + m) / d)
+        # Extract just the a component (index 2)
+        repeating = zip(*l[l.index((m, d, a)):])[2]
+        iterator = itertools.cycle(repeating)
+        while True:
+            yield next(iterator)
 
 class E(Continued):
     """
