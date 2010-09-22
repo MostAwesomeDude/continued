@@ -94,8 +94,6 @@ class Continued(object):
     finite = True
     """
     Whether this instance is finite or infinite.
-
-    This is to avoid isinstance() calls on `digits`.
     """
 
     @classmethod
@@ -213,7 +211,7 @@ class Continued(object):
         Returns an iterable of some sort.
         """
 
-        return self.digitlist
+        raise NotImplementedError
 
     @property
     def fractions(self):
@@ -230,23 +228,21 @@ class Continued(object):
         cls = Continued
 
         if isinstance(other, int):
-            other = Continued.from_int(other)
+            other = Integer(other)
 
         instance = cls()
-        instance.x = self.digits()
-        instance.y = other.digits()
-        instance.make_digits = instance.combiner(initial)
-        if self.finite and other.finite:
-            instance.digitlist = list(instance.make_digits)
-        else:
-            instance.finite = False
+        instance.x = self.digits
+        instance.y = other.digits
+        instance.initial = initial
+        instance.digits = instance.combiner
+        instance.finite = self.finite and other.finite
         return instance
 
-    def combiner(self, initial):
-        a, b, c, d, e, f, g, h = initial
+    def combiner(self):
+        a, b, c, d, e, f, g, h = self.initial
 
-        iterx = itertools.chain(self.x, itertools.repeat(INFINITY))
-        itery = itertools.chain(self.y, itertools.repeat(INFINITY))
+        iterx = itertools.chain(self.x(), itertools.repeat(INFINITY))
+        itery = itertools.chain(self.y(), itertools.repeat(INFINITY))
 
         use_x = True
         x_is_empty = False
@@ -266,7 +262,7 @@ class Continued(object):
                     a - e * r, b - f * r, c - g * r, d - h * r)
                 yield r
             elif self.finite and x_is_empty and y_is_empty:
-                raise StopIteration
+                return
             else:
                 # Which input to choose?
                 if x_is_empty:
