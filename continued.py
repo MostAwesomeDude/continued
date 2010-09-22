@@ -318,12 +318,6 @@ class Continued(object):
         except ValueError:
             pass
 
-    @classmethod
-    def from_int(cls, i):
-        instance = cls()
-        instance.digitlist = [i]
-        return instance
-
 class Integer(Continued):
     """
     An integer.
