@@ -112,7 +112,7 @@ class Continued(object):
             numerator *= 10
             denominator *= 10
 
-        return cls.from_rational(int(numerator), int(denominator))
+        return Rational(int(numerator), int(denominator))
 
     @classmethod
     def from_float(cls, f):
@@ -134,17 +134,13 @@ class Continued(object):
         implementor, not just `Fraction`.
         """
 
-        return cls.from_rational(fraction.numerator, fraction.denominator)
+        return Rational(fraction.numerator, fraction.denominator)
 
     @classmethod
     def from_int(cls, i):
         instance = cls()
         instance.digitlist = [i]
         return instance
-
-    @classmethod
-    def from_rational(cls, n, d):
-        return Rational(n, d)
 
     @classmethod
     def sqrt(cls, i):
