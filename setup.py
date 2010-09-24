@@ -4,7 +4,7 @@ from distutils.core import setup
 
 
 setup(name="continued",
-    version="0.1-prerelease",
+    version="1.0",
     description="Continued fraction library",
     long_description=open("README.rst").read(),
     author="Corbin Simpson",

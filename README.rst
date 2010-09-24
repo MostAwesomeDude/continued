@@ -31,9 +31,20 @@ Bugs
 
 Plenty.
 
- - simplified() might be backwards.
- - Decimal decoding (or any other base, really) is missing.
- - Non-arithmetic operations are missing.
- - The API is too specialized towards simplified fractions.
  - sqrt(2) * sqrt(2) goes into an infinite loop, as does any other operation
    with an arbitrary string of 0.
+
+Some enhancements are planned.
+
+ - Surds should permit the form (a + sqrt(b))/c without an extra pair of
+   combination generators.
+ - Trigonometric operators.
+ - Radix-based decoding.
+
+Changelog
+---------
+
+1.0
+^^^
+
+Initial release.
