@@ -138,15 +138,14 @@ class Continued(object):
         self.digitlist = []
 
     def __repr__(self):
-        return str(self)
-
-    def __str__(self):
         l = list(itertools.islice(self.digits(), 10))
         if len(l) == 10:
             # Truncate and append an ellipsis.
             l = l[:9] + ["..."]
         s = ", ".join(str(x) for x in l)
         return "Continued(%s)" % s
+
+    __str__ = __repr__
 
     def __add__(self, other):
         return self.combine(other, (0, 1, 1, 0, 1, 0, 0, 0))
