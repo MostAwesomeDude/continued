@@ -159,8 +159,7 @@ class Continued(object):
     def __div__(self, other):
         return self.combine(other, (0, 1, 0, 0, 0, 0, 1, 0))
 
-    def __truediv__(self, other):
-        return self.__div__(other)
+    __truediv__ = __div__
 
     def __cmp__(self, other):
         if not isinstance(other, Continued):
