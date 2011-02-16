@@ -10,7 +10,7 @@ space with arbitrary precision.
 import decimal
 import functools
 import fractions
-import itertools
+from itertools import chain, cycle, islice, izip_longest, repeat
 import math
 
 INFINITY = object()
@@ -138,7 +138,7 @@ class Continued(object):
         self.digitlist = []
 
     def __repr__(self):
-        l = list(itertools.islice(self.digits(), 10))
+        l = list(islice(self.digits(), 10))
         if len(l) == 10:
             # Truncate and append an ellipsis.
             l = l[:9] + ["..."]
@@ -169,8 +169,7 @@ class Continued(object):
             return NotImplemented
 
         toggle = False
-        for x, y in itertools.izip_longest(self.digits(), other.digits(),
-            fillvalue=0):
+        for x, y in izip_longest(self.digits(), other.digits(), fillvalue=0):
             if x != y:
                 if toggle:
                     return -1 if x > y else 1
@@ -239,8 +238,8 @@ class Continued(object):
     def combiner(self):
         a, b, c, d, e, f, g, h = self.initial
 
-        iterx = itertools.chain(self.x(), itertools.repeat(INFINITY))
-        itery = itertools.chain(self.y(), itertools.repeat(INFINITY))
+        iterx = chain(self.x(), repeat(INFINITY))
+        itery = chain(self.y(), repeat(INFINITY))
 
         use_x = True
         x_is_empty = False
@@ -402,7 +401,7 @@ class Surd(Continued):
             a = int((math.sqrt(self.i) + m) / d)
         # Extract just the a component (index 2)
         repeating = zip(*l[l.index((m, d, a)):])[2]
-        iterator = itertools.cycle(repeating)
+        iterator = cycle(repeating)
         while True:
             yield next(iterator)
 
@@ -434,7 +433,7 @@ class Phi(Continued):
     finite = False
 
     def digits(self):
-        return itertools.repeat(1)
+        return repeat(1)
 
 class Pi(Continued):
     """
