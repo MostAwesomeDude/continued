@@ -40,9 +40,9 @@ def gcd(a, b):
 
     while a and b and (a != b):
         if a > b:
-            chaff, a = divmod(a, b)
+            a = a % b
         elif b > a:
-            chaff, b = divmod(b, a)
+            b = b % a
 
     return a if a else b
 
